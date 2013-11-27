@@ -8,7 +8,11 @@
 </head>
 
 <body>
-<div id="text" style="position:fixed;height:65px;">
+
+<div id="fps" style="height:65px;">
+</div>
+
+<div id="text" style="height:65px;">
 </div>
 
 <canvas id="my_canvas" moz-opaque="true" tabindex="1">
@@ -19,35 +23,14 @@ enabled.  To get a WebGL-enabled browser, please see:<br/>
   </a>
 </canvas>
 
+<script type="text/javascript" src="framework.js">
+</script>
+
 <script type="text/javascript">
-
-var textEl;
-var setText = function setTextFn(msg)
-{
-    textEl.innerHTML = msg;
-};
-
-var canvas;
-var setInterval = function setInterval(fn)
-{
-    var requestAnimationFrame =
-        window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.oRequestAnimationFrame ||
-        window.msRequestAnimationFrame ||
-        window.mozRequestAnimationFrame;
-
-    var wrap = function wrapFn()
-    {
-        fn();
-        requestAnimationFrame(wrap, canvas);
-    };
-    wrap();
-};
 
 // =============================================================================
 
-var main = function mainFn()
+main = function mainFn()
 {
     var numParticles = 1000000;
     var particles = new Float32Array(numParticles * 6);
@@ -62,31 +45,38 @@ var main = function mainFn()
         particles[(i*6) + 5] = 1;
     }
 
-    var deltaTime = 0.0166;
-    var accel = [ 0, -9.81, 0.1 ];
+    var deltaTime = new Float32Array([0.0166]);
+    var accel = new Float32Array([ 0, -9.81, 0.1 ]);
     var frame = 60;
 
     setInterval(function () {
 
         var p = particles;
-        var dt = deltaTime;
+        var numP = numParticles * 6;
+        var dt = deltaTime[0];
         var a = accel;
 
-        for (var i = 0 ; i < numParticles ; ++i)
+        var ax = accel[0];
+        var ay = accel[1];
+        var az = accel[2];
+
+        var vel_x;
+        var vel_y;
+        var vel_z;
+
+        for (var pb = 0 ; pb < numP ; pb += 6)
         {
-            var pb = 6*i;
+            vel_x = p[pb+3];
+            vel_y = p[pb+4]
+            vel_z = p[pb+5];
 
-            var vel_x = p[pb+3];
-            var vel_y = p[pb+4]
-            var vel_z = p[pb+5];
+            p[pb+0] += dt * vel_x;
+            p[pb+1] += dt * vel_y;
+            p[pb+2] += dt * vel_z;
 
-            p[pb+0] += deltaTime * vel_x;
-            p[pb+1] += deltaTime * vel_y;
-            p[pb+2] += deltaTime * vel_z;
-
-            p[pb+3] = vel_x + (deltaTime * a[0]);
-            p[pb+4] = vel_y + (deltaTime * a[1]);
-            p[pb+5] = vel_z + (deltaTime * a[2]);
+            p[pb+3] = vel_x + (dt * ax);
+            p[pb+4] = vel_y + (dt * ay);
+            p[pb+5] = vel_z + (dt * az);
         }
 
         if (60 <= ++frame)
@@ -97,14 +87,6 @@ var main = function mainFn()
         }
 
     });
-};
-
-window.onload = function ()
-{
-    textEl = document.getElementById("text");
-    canvas = document.getElementById('turbulenz_game_engine_canvas');
-
-    main();
 };
 
 </script>

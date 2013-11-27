@@ -8,7 +8,11 @@
 </head>
 
 <body>
-<div id="text" style="position:fixed;height:65px;">
+
+<div id="fps" style="height:65px;">
+</div>
+
+<div id="text" style="height:65px;">
 </div>
 
 <canvas id="my_canvas" moz-opaque="true" tabindex="1">
@@ -19,31 +23,10 @@ enabled.  To get a WebGL-enabled browser, please see:<br/>
   </a>
 </canvas>
 
+<script type="text/javascript" src="framework.js">
+</script>
+
 <script type="text/javascript">
-
-var textEl;
-var setText = function setTextFn(msg)
-{
-    textEl.innerHTML = msg;
-};
-
-var canvas;
-var setInterval = function setInterval(fn)
-{
-    var requestAnimationFrame =
-        window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.oRequestAnimationFrame ||
-        window.msRequestAnimationFrame ||
-        window.mozRequestAnimationFrame;
-
-    var wrap = function wrapFn()
-    {
-        fn();
-        requestAnimationFrame(wrap, canvas);
-    };
-    wrap();
-};
 
 // =============================================================================
 
@@ -51,7 +34,6 @@ var main = function mainFn()
 {
     var numParticles = 1000000;
     var particles = [];
-    particles.length[numParticles-1] = null;
 
     for (var i = 0 ; i < numParticles ; ++i)
     {
@@ -75,21 +57,31 @@ var main = function mainFn()
         var dt = deltaTime;
         var a = accel;
 
+        var ax = accel[0];
+        var ay = accel[1];
+        var az = accel[2];
+
+        var vel_x;
+        var vel_y;
+        var vel_z;
+
+        var p;
+
         for (var i = 0 ; i < numParticles ; ++i)
         {
-            var p = ps[i];
+            p = ps[i];
 
-            var vel_x = p.velocity_x;
-            var vel_y = p.velocity_y;
-            var vel_z = p.velocity_z;
+            vel_x = p.velocity_x;
+            vel_y = p.velocity_y;
+            vel_z = p.velocity_z;
 
             p.position_x += deltaTime * vel_x;
             p.position_y += deltaTime * vel_y;
             p.position_z += deltaTime * vel_z;
 
-            p.velocity_x = vel_x + (deltaTime * a[0]);
-            p.velocity_y = vel_y + (deltaTime * a[1]);
-            p.velocity_z = vel_z + (deltaTime * a[2]);
+            p.velocity_x = vel_x + (deltaTime * ax);
+            p.velocity_y = vel_y + (deltaTime * ay);
+            p.velocity_z = vel_z + (deltaTime * az);
         }
 
         if (60 <= ++frame)
@@ -101,14 +93,6 @@ var main = function mainFn()
         }
 
     });
-};
-
-window.onload = function ()
-{
-    textEl = document.getElementById("text");
-    canvas = document.getElementById('turbulenz_game_engine_canvas');
-
-    main();
 };
 
 </script>
