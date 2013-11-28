@@ -30,69 +30,58 @@ enabled.  To get a WebGL-enabled browser, please see:<br/>
 
 // =============================================================================
 
-var main = function mainFn()
+function StructureOfArraysTest()
 {
-    var numParticles = 1000000;
+}
 
-    var particles_posx = [];
-    // particles_posx.length = numParticles;
-    // particles_posx[numParticles-1] = 0;
-    var particles_posy = [];
-    // particles_posy.length = numParticles;
-    // particles_posy[numParticles-1] = 0;
-    var particles_posz = [];
-    // particles_posz.length = numParticles;
-    // particles_posz[numParticles-1] = 0;
-    var particles_velx = [];
-    // particles_velx.length = numParticles;
-    // particles_velx[numParticles-1] = 0;
-    var particles_vely = [];
-    // particles_vely.length = numParticles;
-    // particles_vely[numParticles-1] = 0;
-    var particles_velz = [];
-    // particles_velz.length = numParticles;
-    // particles_velz[numParticles-1] = 0;
+StructureOfArraysTest.prototype = {
 
-    // var particles_posx = new Array(numParticles);
-    // var particles_posy = new Array(numParticles);
-    // var particles_posz = new Array(numParticles);
-    // var particles_velx = new Array(numParticles);
-    // var particles_vely = new Array(numParticles);
-    // var particles_velz = new Array(numParticles);
-
-    for (var i = 0 ; i < numParticles ; ++i)
+    setup: function setupFn(numParticles)
     {
-        particles_posx[i] = 1;
-        particles_posy[i] = 2;
-        particles_posz[i] = i;
-        particles_velx[i] = 0;
-        particles_vely[i] = 50;
-        particles_velz[i] = 1;
-    }
+        var particles_posx = [];
+        var particles_posy = [];
+        var particles_posz = [];
+        var particles_velx = [];
+        var particles_vely = [];
+        var particles_velz = [];
 
-    var deltaTime = 0.0166;
-    var accel = [ 0, -9.81, 0.1 ];
-    var frame = 60;
+        for (var i = 0 ; i < numParticles ; ++i)
+        {
+            particles_posx[i] = 1;
+            particles_posy[i] = 2;
+            particles_posz[i] = i;
+            particles_velx[i] = 0;
+            particles_vely[i] = 50;
+            particles_velz[i] = 1;
+        }
 
-    // Inner Loop
+        this.numParticles = numParticles;
+        this.particles_posx = particles_posx;
+        this.particles_posy = particles_posy;
+        this.particles_posz = particles_posz;
+        this.particles_velx = particles_velx;
+        this.particles_vely = particles_vely;
+        this.particles_velz = particles_velz;
+        this.accel = [ 0, -9.81, 0.1 ];
+    },
 
-    setInterval(function () {
+    tick: function tickFn(deltaTime)
+    {
+        var numP = this.numParticles;
 
-        var p_posx = particles_posx;
-        var p_posy = particles_posy;
-        var p_posz = particles_posz;
-        var p_velx = particles_velx;
-        var p_vely = particles_vely;
-        var p_velz = particles_velz;
-
-        var numP = numParticles;
+        var p_posx = this.particles_posx;
+        var p_posy = this.particles_posy;
+        var p_posz = this.particles_posz;
+        var p_velx = this.particles_velx;
+        var p_vely = this.particles_vely;
+        var p_velz = this.particles_velz;
 
         var dt = deltaTime;
-        var a = accel;
+        var a = this.accel;
 
-        var ax = accel[0];
-        var ay = accel[1];
-        var az = accel[2];
+        var ax = a[0];
+        var ay = a[1];
+        var az = a[2];
 
         var vel_x;
         var vel_y;
@@ -112,15 +101,19 @@ var main = function mainFn()
             p_vely[i] = vel_y + (dt * ay);
             p_velz[i] = vel_z + (dt * az);
         }
+    },
 
-        if (60 <= ++frame)
-        {
-            setText("particle[0]: " + p_posx[0] + ", " + p_posy[1] + ", " + p_posz[2]);
-            frame = 0;
-        }
+    getText: function getTextFn()
+    {
+        var p_posx = this.particles_posx;
+        var p_posy = this.particles_posy;
+        var p_posz = this.particles_posz;
 
-    });
+        return "" + p_posx[0] + ", " + p_posy[1] + ", " + p_posz[2];
+    }
 };
+
+var mainTest = new StructureOfArraysTest();
 
 </script>
 

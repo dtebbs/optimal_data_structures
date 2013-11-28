@@ -9,8 +9,12 @@ var setText = function setTextFn(msg)
 var fpsEl;
 
 var canvas;
-var setInterval = function setInterval(fn)
+var setInterval = function setInterval(test)
 {
+    var iterations = 1;
+    var numParticles = 1000000;
+    var deltaTime = 0.01666;
+
     var requestAnimationFrame =
         window.requestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
@@ -26,20 +30,24 @@ var setInterval = function setInterval(fn)
         getTime = function () { return performance.now(); };
     }
 
-    var iterations = 1;
-
     var lastUpdateTime = getTime();
 
     var executionTime = 0;
     var frameCount = 0;
 
+    // Set up the test
+
+    test.setup(numParticles);
+
     var wrap = function wrapFn()
     {
+        var _test = test;
+        var _deltaTime = deltaTime;
         var startTime = getTime();
 
         for (var i = 0 ; i < iterations ; ++i)
         {
-            fn();
+            _test.tick(_deltaTime)
         }
 
         var endTime = getTime();
@@ -65,6 +73,8 @@ var setInterval = function setInterval(fn)
 
             lastUpdateTime = endTime;
 
+            setText("particle[0]: " + _test.getText());
+
             frameCount = 0;
             executionTime = 0;
         }
@@ -80,16 +90,18 @@ window.onload = function ()
     textEl = document.getElementById("text");
     canvas = document.getElementById('turbulenz_game_engine_canvas');
 
-    var runMain = function runMain()
+    // Wait until test has been defined, then set the timeout
+
+    var waitTest = function waitTestFn()
     {
-        if (main)
+        if (mainTest)
         {
-            main();
+            setInterval(mainTest);
         }
         else
         {
-            window.setTimeout(runMain, 0.01);
+            window.setTimeout(waitTest, 0.01);
         };
     }
-    runMain();
+    waitTest();
 };

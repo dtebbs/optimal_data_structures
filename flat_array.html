@@ -30,40 +30,44 @@ enabled.  To get a WebGL-enabled browser, please see:<br/>
 
 // =============================================================================
 
-var main = function mainFn()
+function FlatArrayTest()
 {
-    var numParticles = 1000000;
+}
 
-    var particles = [];
-    // particles[(6*numParticles)-1] = 0;
-    // particles.length = (6*numParticles)-1;
+FlatArrayTest.prototype = {
 
-    // var particles = new Array(numParticles*6);
-
-    for (var i = 0 ; i < numParticles ; ++i)
+    setup: function setupFn(numParticles)
     {
-        particles[(i*6) + 0] = 1;
-        particles[(i*6) + 1] = 2;
-        particles[(i*6) + 2] = i;
-        particles[(i*6) + 3] = 0;
-        particles[(i*6) + 4] = 50;
-        particles[(i*6) + 5] = 1;
-    }
+        var particles = [];
+        // particles.length = 6*numParticles;
+        // particles[(6*numParticles)-1] = 0;
+        // var particles = new Array(numParticles*6);
 
-    var deltaTime = 0.0166;
-    var accel = [ 0, -9.81, 0.1 ];
-    var frame = 60;
+        for (var i = 0 ; i < numParticles ; ++i)
+        {
+            particles[(i*6) + 0] = 1;
+            particles[(i*6) + 1] = 2;
+            particles[(i*6) + 2] = i;
+            particles[(i*6) + 3] = 0;
+            particles[(i*6) + 4] = 50;
+            particles[(i*6) + 5] = 1;
+        }
 
-    setInterval(function () {
+        this.numParticles = numParticles;
+        this.particles = particles;
+        this.accel = [ 0, -9.81, 0.1 ];
+    },
 
-        var p = particles;
-        var numP = numParticles * 6;
+    tick: function tickFn(deltaTime)
+    {
+        var p = this.particles;
+        var numP = this.numParticles * 6;
+        var a = this.accel;
         var dt = deltaTime;
-        var a = accel;
 
-        var ax = accel[0];
-        var ay = accel[1];
-        var az = accel[2];
+        var ax = a[0];
+        var ay = a[1];
+        var az = a[2];
 
         var vel_x;
         var vel_y;
@@ -83,16 +87,16 @@ var main = function mainFn()
             p[pb+4] = vel_y + (dt * ay);
             p[pb+5] = vel_z + (dt * az);
         }
+    },
 
-        if (60 <= ++frame)
-        {
-            p = particles;
-            setText("particle[0]: " + p[0] + ", " + p[1] + ", " + p[2]);
-            frame = 0;
-        }
-
-    });
+    getText: function getTextFn()
+    {
+        var p = this.particles;
+        return "" + p[0] + ", " + p[1] + ", " + p[2];
+    },
 };
+
+var mainTest = new FlatArrayTest();
 
 </script>
 
